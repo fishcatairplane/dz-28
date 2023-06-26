@@ -1,0 +1,68 @@
+package objects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+
+public class AbstractPageObject {
+    private final static int DURATION_FOR_WAIT = 4;
+    protected WebDriver driver;
+    private WebDriverWait wait;
+
+
+    public AbstractPageObject(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, DURATION_FOR_WAIT);
+    }
+
+    public WebElement getElement(By by, int waitForSeconds) {
+        return new WebDriverWait(driver, waitForSeconds)
+                .until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public WebElement getElement(By by) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public List<WebElement> getElements(By by, int waitForSeconds) {
+        return new WebDriverWait(driver, waitForSeconds)
+                .until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
+    public List<WebElement> getElements(By by) {
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
+    public void waitTillAppears(By by, int waitForSeconds) {
+        new WebDriverWait(driver, waitForSeconds)
+                .until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public void waitTillAppears(By by) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public void waitTillDisappears(By by, int waitForSeconds) {
+        new WebDriverWait(driver, waitForSeconds)
+                .until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
+    public void waitTillDisappears(By by) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
+    public void adsScrollHandler(By by) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement adsHandling = driver.findElement(by);
+        js.executeScript("arguments[0].scrollIntoView();", adsHandling);
+    }
+
+    public void fillInInputField(By by, String input) {
+        getElement(by).sendKeys(input);
+    }
+}
